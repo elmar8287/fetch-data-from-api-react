@@ -1,27 +1,40 @@
 import logo from './logo.svg';
 import './App.css';
 import axios from 'axios';
+import { useEffect, useState } from 'react';
 
 function App() {
-  const baseUrl = "https://jsonplaceholder.typicode.com/comments/1"
+  const baseUrl = "https://jsonplaceholder.typicode.com/comments/"
+  const [data, setData] = useState(null)
+  useEffect(()=> {
+    axios
+      .get(baseUrl)
+      .then(resp=>{
+        setData(resp.data)
+      })
+  },[])
+
+  if(data===null) {
+    return null 
+  } else {
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <h1>This data fetched from API using Axios</h1>
+        <p>Total found {data.length} comments</p>
+        {data!==null && data!==undefined &&
+          data.map(e=>(
+            <div className="card">
+              <h2>{e.name}</h2>
+              <h4>{e.email}</h4>
+              <p>{e.body}</p>
+          </div>
+          ))
+        }
       </header>
     </div>
   );
 }
-
+}
 export default App;
